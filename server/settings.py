@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 from pathlib import Path
 import environ
 import os
+from datetime import timedelta
 
 # Initialise environment variables
 env = environ.Env()
@@ -26,6 +27,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
+#TODO: change this to env
 SECRET_KEY = 'django-insecure-@xx)a!cg-79-*6cx%&(nr82*w)1xn^#qo)n#leun&zbj%n&*es'
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -46,6 +48,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'corsheaders',
+    'django_filters',
     'api'
 ]
 
@@ -159,8 +162,18 @@ EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
-    ]
+    ],
+    'DEFAULT_FILTER_BACKENDS': (
+        'django_filters.rest_framework.DjangoFilterBackend',
+    ),
+}
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=30),
+    'USER_ID_FIELD': 'unique_identifier',
 }
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
+USE_X_FORWARDED_HOST = True
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')

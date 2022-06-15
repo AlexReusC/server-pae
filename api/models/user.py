@@ -16,12 +16,13 @@ class UserManager(BaseUserManager):
 		return user
 
 class User(AbstractBaseUser, PermissionsMixin):
-	unique_identifier = models.CharField(max_length=20, primary_key=True)
+	unique_identifier = models.CharField(max_length=22, primary_key=True)
 	is_validated = models.BooleanField(default=False)
 	is_superuser = models.BooleanField(default=False)
 	is_staff = models.BooleanField(default=False)
 	is_tutor = models.BooleanField(default=False)
 	is_student = models.BooleanField(default=False)
+	is_administrator = models.BooleanField(default=False)
 
 	objects = UserManager()
 
@@ -33,4 +34,5 @@ class User(AbstractBaseUser, PermissionsMixin):
 			return self.tutor
 		if self.is_student:
 			return self.student
-		#TODO admin
+		if self.is_administrator:
+			return self.administrator
